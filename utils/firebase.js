@@ -1,5 +1,6 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 
 const firebaseConfig = {
@@ -9,6 +10,8 @@ const firebaseConfig = {
     storageBucket: "alkilectro-v1.appspot.com",
     messagingSenderId: "730993714458",
     appId: "1:730993714458:web:ad8b223d72785d16b178a3",
-};
+}
 
-export const firebaseApp = firebase.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
+export const auth = getAuth();
+export const database = getFirestore();

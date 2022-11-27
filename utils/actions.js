@@ -1,20 +1,16 @@
+import { auth, database } from './firebase'
+import { collection, addDoc } from 'firebase/firestore';
+import 'firebase/firestore'
 
+import { signInWithEmailAndPassword,currentUser,onAuthStateChanged } from "firebase/auth";
 
-import { firebaseApp } from './firebase'
-import   firebase  from 'firebase'
-import 'firebase/auth'
+//const db = firebase.firestore(firebaseApp)
 
-
-//import { fileTobBlob } from '../utils/helpers'
-
-
-const db = firebase.firestore(firebaseApp)
-
-export const isUserLogged= () => 
+export const isUserLogged = () => 
 {
     let isLogged = false
  
-    firebase.auth().onAuthStateChanged((user) => {
+    onAuthStateChanged(auth,(user) => {
         user !== null && (isLogged = true) 
     })
 
@@ -23,10 +19,11 @@ export const isUserLogged= () =>
 }
 
 export const getCurrentUser = ()  => {
-    return firebase.auth().currentUser
+  
+    return auth.currentUser
 }
 
-export const registerUser  = async (email, password) => {
+/* export const registerUser  = async (email, password) => {
     const result= {statusResponse: true, error:null}
     try {
         await firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -123,4 +120,4 @@ export const updatePassword = async (password) => {
         result.error = error
     }
     return result
-}
+} */

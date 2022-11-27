@@ -1,12 +1,27 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { Image,StyleSheet, Text, View } from 'react-native'
+import RegisterForm from '../../components/account/RegisterForm'
+import{KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+
 
 export default function Register() {
-  return (
-    <View>
-      <Text>Register</Text>
-    </View>
-  )
+    return (
+        <KeyboardAwareScrollView >
+        <Image
+          source={require("../../assets/alkilectroLogo.png")}
+          resizeMode="contain"
+          style={styles.image}
+        />
+         <RegisterForm/>
+       </KeyboardAwareScrollView>
+    )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    image:{
+        height:150,
+        width:"100%",
+        marginBottom:20
+    },
+
+})
