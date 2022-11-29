@@ -7,9 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/alkilectroLogo.png",
+      "image": "./assets/alkilectroLogo_3.png",
       "resizeMode": "contain",
-      "backgroundColor": "#4fb4ab"
+      "backgroundColor": "#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

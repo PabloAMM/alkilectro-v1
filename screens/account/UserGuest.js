@@ -13,7 +13,7 @@ export default function UserGuest() {
         >
   
             <Image
-              source = {require ("../../assets/alkilectroLogo.png")}
+              source = {require ("../../assets/alkilectroLogo_3.png")}
               resizeMode="contain"
               style={styles.image}    
              />
@@ -54,7 +54,10 @@ const styles = StyleSheet.create({
     image:{
         height:300,
         width:"100%",
-        marginBottom:5
+        marginBottom:20,
+        backgroundColor:"#FFFFFF",
+        borderBottomLeftRadius: 20,  
+        borderBottomRightRadius: 20,  
 
     },
 
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
     },
 
     btnLogin:{
-        backgroundColor:"#367d8d"
+        backgroundColor:"#6c9885"
     },
 
     register:{

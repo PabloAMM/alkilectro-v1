@@ -23,6 +23,7 @@
     "react-native": "0.70.5",
     "react-native-animated-spinkit": "^1.5.2",
     "react-native-codegen": "^0.71.3",
+    "react-native-easy-toast": "^2.3.0",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-indicators": "^0.17.0",
