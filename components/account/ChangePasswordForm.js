@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { isEmpty, size } from 'lodash'
 
-import { reauthenticate, updatePassword } from '../../utils/actions'
+import { reauthenticate, updateUserPassword } from '../../utils/actions'
 
 
 export default function ChangePasswordForm({ setShowModal, toastRef }) {
@@ -34,7 +34,7 @@ export default function ChangePasswordForm({ setShowModal, toastRef }) {
         }
 
 
-        const resultUpdatePassword = await updatePassword(newPassword)
+        const resultUpdatePassword = await updateUserPassword(newPassword)
 
         setLoading(false)
         if (!resultUpdatePassword.statusResponse) {

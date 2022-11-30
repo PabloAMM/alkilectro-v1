@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { isEmpty } from 'lodash'
 
-import { reauthenticate, updateEmail } from '../../utils/actions'
+import { reauthenticate, updateUserEmail } from '../../utils/actions'
 import { validateEmail } from '../../utils/helpers'
 
 export default function ChangeEmailForm({ email, setShowModal, toastRef, setReloadUser }) {
@@ -32,7 +32,7 @@ export default function ChangeEmailForm({ email, setShowModal, toastRef, setRelo
         }
 
         
-        const resultUpdateEmail = await updateEmail(newEmail)
+        const resultUpdateEmail = await updateUserEmail(newEmail)
         
         setLoading(false)
         if (!resultUpdateEmail.statusResponse) {

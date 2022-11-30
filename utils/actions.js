@@ -1,4 +1,4 @@
-import { auth, database, firebaseApp } from "./firebase";
+import { auth, database, firebaseApp,storage } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 import "firebase/firestore";
 import {
@@ -9,7 +9,9 @@ import {
   reauthenticateWithCredential,
   updateEmail,
   updatePassword,
+  updateProfile
 } from "firebase/auth";
+
 
 export const isUserLogged = () => {
   let isLogged = false;
@@ -47,17 +49,17 @@ export const closeSession = () => {
   return auth.signOut();
 };
 
-export const updateProfile = async (data) => {
+export const updateUserProfile = async (data) => {
   const result = { statusResponse: true, error: null };
 
   try {
     
-    await auth.updateCurrentUser(auth.currentUser,data);
-    console.log("UpdateProfile",auth.currentUser)
+    await updateProfile(auth.currentUser,data );
+    
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
-    console.log("UpdateProfile",result)
+    
   }
   return result;
 };
@@ -95,15 +97,14 @@ export const reauthenticate = async (password) => {
   return result;
 };
 
-export const updateEmail1 = async (email) => {
+export const updateUserEmail = async (email) => {
   const result = {
     statusResponse: true,
     error: null,
   };
 
   try {
-    await updateEmail(email);
-    //await firebase.auth().currentUser.updateEmail(email)
+    await updateEmail(auth.currentUser,email);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
@@ -111,14 +112,14 @@ export const updateEmail1 = async (email) => {
   return result;
 };
 
-export const updatePassword1 = async (password) => {
+export const updateUserPassword = async (password) => {
   const result = {
     statusResponse: true,
     error: null,
   };
 
   try {
-    await updatePassword(password);
+    await updatePassword(auth.currentUser,password);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
@@ -139,12 +140,13 @@ export const addDocumentWithoutId = async (collectiondb, data) => {
 
 export const uploadImage = async(image, path, name) => {
     const result = { statusResponse: false, error: null, url: null }
-    const ref = firebase.storage().ref(path).child(name)
+  //  const ref = storage.storage().ref(path).child(name)
+ 
     const blob = await fileToBlob(image)
 
     try {
         await ref.put(blob)
-        const url = await firebase.storage().ref(`${path}/${name}`).getDownloadURL()
+        const url = await storage.storage().ref(`${path}/${name}`).getDownloadURL()
         result.statusResponse = true
         result.url = url
     } catch (error) {

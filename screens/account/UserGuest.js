@@ -47,7 +47,8 @@ export default function UserGuest() {
 const styles = StyleSheet.create({
 
     viewBody: {
-        marginHorizontal: 20,
+        marginHorizontal: 20
+     
 
     },
 

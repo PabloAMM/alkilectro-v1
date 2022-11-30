@@ -24,6 +24,7 @@ export default function UserLogged() {
 
     useEffect(() => {
         setUser(getCurrentUser())
+        console.log("UserLoged",user)
         setReloadUser(false)
     }, [reloadUser])
 
@@ -54,7 +55,7 @@ export default function UserLogged() {
                 titleStyle={styles.btnCloseSessionTitle}
                 onPress={() => {
                     closeSession()
-                    navigation.navigate("catalogue")
+                    navigation.navigate("events")
                 }}
 
             />

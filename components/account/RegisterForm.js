@@ -6,7 +6,7 @@ import { size } from 'lodash'
 //import MapView from 'react-native-maps'
 
 import { validateEmail, getCurrentLocation } from '../../utils/helpers'
-import { registerUser, addDocumentWithoutId, updateProfile } from '../../utils/actions'
+import { registerUser, addDocumentWithoutId, updateUserProfile } from '../../utils/actions'
 import Loading from '../loading/Loading'
 // import MapUser from './MapUser'
 //import Modal from '../../utils/Modal'
@@ -55,7 +55,7 @@ export default function RegisterForm() {
         }
 
 
-        const responseUpdateProfile = await updateProfile({ displayName: formData.fullname })
+        const responseUpdateProfile = await updateUserProfile({ displayName: formData.fullname })
         setLoading(false)
         if (!responseUpdateProfile.statusResponse) {
             setErrorFullname("Error al actualizar el nombre y apellido")
@@ -244,15 +244,20 @@ const defaultFormValues = () => {
 const styles = StyleSheet.create({
 
     form: {
-        marginTop: 30
+        marginTop: 20,
+        backgroundColor:"#FFFFFF"
     },
     input: {
-        width: "100%"
+        width: "90%",
+        margin:20,
+        height:15
+        
     },
     btnContainer: {
-        marginTop: 20,
-        width: "95%",
-        alignSelf: "center"
+        marginTop: 30,
+        width: "90%",
+        alignSelf: "center",
+        marginVertical:30
     },
     btn: {
         backgroundColor: "#41ac88"
