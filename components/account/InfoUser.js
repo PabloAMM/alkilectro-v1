@@ -19,12 +19,14 @@ export default function InfoUser({ user, setLoadingText, setLoading }) {
         }
         setLoadingText("Actualizando foto de perfil..")
         setLoading(true)
-        const resultUploadImage = await uploadImage(result.image, "avatars", user.uid)
+        const resultUploadImage = await uploadImage(result.image, "avatars", user.uid)              
         if (!resultUploadImage.statusResponse) {
+            
             setLoading(false)
             Alert.alert("Hubo un error guardando la foto de perfil")
             return
         }
+        console.log("StatusResponse",resultUploadImage)  
         const resultUpdateProfile = await updateUserProfile({ photoURL: resultUploadImage.url })
         setLoading(false)
         if (resultUpdateProfile.statusResponse) {

@@ -1,8 +1,9 @@
-import * as Permissions from 'expo-permissions'
+
 import * as ImagePicker from 'expo-image-picker'
 import * as Location from 'expo-location'
 import { Alert, Linking } from 'react-native'
 import { size } from 'lodash'
+import * as Permissions from 'expo-permissions'
 
 
 export function validateEmail(email) {
@@ -11,26 +12,33 @@ export function validateEmail(email) {
 }
 
 
-export const loadImageFromGallery = async(array) => {
+export const loadImageFromGallery = async (array) => {
     const response = { status: false, image: null }
-    const resultPermissions = await Permissions.askAsync(Permissions.CAMERA)
+   // const [status, requestPermission] = ImagePicker.useCameraPermissions()
+     const resultPermissions = await Permissions.askAsync(Permissions.CAMERA)
+     console.log("resultPermissions",resultPermissions)
+   
     if (resultPermissions.status === "denied") {
         Alert.alert("Debes de darle permiso para accerder a las imágenes del teléfono.")
         return response
-    }   
-    const result = await ImagePicker.launchImageLibraryAsync({      
+    } 
+    const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: array
+        aspect: array,
+        quality: 1,
+
     })
-    if (result.cancelled) {
+    if (result.canceled) {
         return response
     }
     response.status = true
-    response.image = result.uri
+    response.image = result.assets[0].uri
+    console.log("uri", result.assets)
     return response
 }
 
-export const fileTobBlob = async(path) => {
+export const fileTobBlob = async (path) => {
     const file = await fetch(path)
     const blob = await file.blob()
     return blob

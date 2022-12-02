@@ -23,8 +23,7 @@ export default function UserLogged() {
 
 
     useEffect(() => {
-        setUser(getCurrentUser())
-        console.log("UserLoged",user)
+        setUser(getCurrentUser())       
         setReloadUser(false)
     }, [reloadUser])
 

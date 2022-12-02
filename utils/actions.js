@@ -1,6 +1,7 @@
-import { auth, database, firebaseApp,storage } from "./firebase";
+import { auth, database, firebaseApp, storage } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 import "firebase/firestore";
+import { fileTobBlob } from "./helpers";
 import {
   EmailAuthProvider,
   signInWithEmailAndPassword,
@@ -9,9 +10,14 @@ import {
   reauthenticateWithCredential,
   updateEmail,
   updatePassword,
-  updateProfile
+  updateProfile,
 } from "firebase/auth";
-
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 export const isUserLogged = () => {
   let isLogged = false;
@@ -53,13 +59,11 @@ export const updateUserProfile = async (data) => {
   const result = { statusResponse: true, error: null };
 
   try {
-    
-    await updateProfile(auth.currentUser,data );
-    
+    console.log("data", data);
+    await updateProfile(auth.currentUser, data);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
-    
   }
   return result;
 };
@@ -104,7 +108,7 @@ export const updateUserEmail = async (email) => {
   };
 
   try {
-    await updateEmail(auth.currentUser,email);
+    await updateEmail(auth.currentUser, email);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
@@ -119,7 +123,7 @@ export const updateUserPassword = async (password) => {
   };
 
   try {
-    await updatePassword(auth.currentUser,password);
+    await updatePassword(auth.currentUser, password);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
@@ -138,19 +142,49 @@ export const addDocumentWithoutId = async (collectiondb, data) => {
   return result;
 };
 
-export const uploadImage = async(image, path, name) => {
-    const result = { statusResponse: false, error: null, url: null }
-  //  const ref = storage.storage().ref(path).child(name)
- 
-    const blob = await fileToBlob(image)
+export const uploadImage = async (image, path, name) => {
+  const result = { statusResponse: false, error: null, url: null };
 
-    try {
-        await ref.put(blob)
-        const url = await storage.storage().ref(`${path}/${name}`).getDownloadURL()
-        result.statusResponse = true
-        result.url = url
-    } catch (error) {
-        result.error = error
+  // Upload file and metadata to the object 'images/mountains.jpg'
+  const storaageRef = ref(storage, `${path}/${name}`);
+  const blob = await fileTobBlob(image);
+  const uploadTask = uploadBytesResumable(storaageRef, blob);
+
+  // Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log("Upload is " + progress + "% done");
+      switch (snapshot.state) {
+        case "paused":
+          console.log("Upload is paused");
+          break;
+        case "running":
+          console.log("Upload is running");
+          break;
+      }
+    },
+    (error) => {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      switch (error.code) {
+        case "storage/unauthorized":
+          // User doesn't have permission to access the object
+          break;
+        case "storage/canceled":
+          // User canceled the upload
+          break;
+
+        case "storage/unknown":
+          // Unknown error occurred, inspect error.serverResponse
+          break;
+      }
     }
-    return result
-}
+  );
+  const uri = await getDownloadURL(uploadTask.snapshot.ref);
+  result.statusResponse = true;
+  result.url = uri;
+  return result;
+};
