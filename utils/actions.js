@@ -90,10 +90,14 @@ export const reauthenticate = async (password) => {
   };
 
   const user = getCurrentUser();
-  const credentials = EmailAuthProvider.credential(email, password);
-
+  const credentials = EmailAuthProvider.credential(user.email, password);
+  console.log("Credentials", credentials);
   try {
-    await reauthenticateWithCredential(user, credentials);
+    const reauthentication = await reauthenticateWithCredential(
+      user,
+      credentials
+    );
+    console.log("Reauthentication", reauthentication);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;

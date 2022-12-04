@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import { isEmpty } from 'lodash'
 
-import { updateProfile } from '../../utils/actions'
+import { updateUserProfile } from '../../utils/actions'
 
 
 export default function ChangeDisplayNameForm({ displayName, setShowModal, toastRef, setReloadUser }) {
@@ -17,7 +17,7 @@ export default function ChangeDisplayNameForm({ displayName, setShowModal, toast
         }
 
         setLoading(true)
-        const result = await updateProfile({ displayName: newDisplayName })
+        const result = await updateUserProfile({ displayName: newDisplayName })
         setLoading(false)
         if (!result.statusResponse) {
             setError("Error al actualizar el nombre y apellido")
