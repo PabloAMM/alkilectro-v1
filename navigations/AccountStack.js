@@ -14,9 +14,9 @@ export default function AccountStack() {
   return (
     <Stack.Navigator>
         <Stack.Screen
-            name="account"
+            name="information"
             component={Account}
-            options={{ title: "Cuenta" }}
+            options={{ title: "Información" }}
         />
 
          <Stack.Screen

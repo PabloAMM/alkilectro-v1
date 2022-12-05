@@ -21,8 +21,8 @@ export default function UserGuest() {
 
              <Text style={styles.description}>
                
-                Esta es la aplicación de reserva de equipos audiovisuales
-                que tu evento necesita.
+                Esta es la aplicación administración audiovisuales
+                que tus eventos necesita.
                 {"\n"}
                 {"\n"}
                 Ingresa y conoce todas las opciones que tenems para ti.
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         fontSize:15,
         color:"black",
         fontWeight: "bold",
-        marginTop:5
+        marginTop:15
     },
     divider: {
         backgroundColor: "#21745d",

@@ -2,7 +2,6 @@
 import * as ImagePicker from 'expo-image-picker'
 import * as Location from 'expo-location'
 import { Alert, Linking } from 'react-native'
-import { size } from 'lodash'
 import * as Permissions from 'expo-permissions'
 
 
@@ -34,7 +33,7 @@ export const loadImageFromGallery = async (array) => {
     }
     response.status = true
     response.image = result.assets[0].uri
-    console.log("uri", result.assets)
+    
     return response
 }
 

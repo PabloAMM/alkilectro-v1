@@ -1,5 +1,5 @@
 import { auth, database, firebaseApp, storage } from "./firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc, setDoc } from "firebase/firestore";
 import "firebase/firestore";
 import { fileTobBlob } from "./helpers";
 import {
@@ -11,13 +11,11 @@ import {
   updateEmail,
   updatePassword,
   updateProfile,
+  updatePhoneNumber,
+  PhoneAuthProvider,
 } from "firebase/auth";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export const isUserLogged = () => {
   let isLogged = false;
@@ -30,20 +28,16 @@ export const isUserLogged = () => {
 };
 
 export const getCurrentUser = () => {
+  console.log("User", auth.currentUser);
   return auth.currentUser;
 };
 
 export const registerUser = async (email, password) => {
-  const result = { statusResponse: true, error: null };
+  const result = { statusResponse: true, error: null, uid: null };
   try {
-    await createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        // ...
-      }
-    );
+    const user = await createUserWithEmailAndPassword(auth, email, password);
+    result.uid = user.user.uid;
+    console.log("UserCreated", user);
   } catch (error) {
     result.statusResponse = false;
     result.error = "Este correo ya ha sido registrado";
@@ -146,6 +140,35 @@ export const addDocumentWithoutId = async (collectiondb, data) => {
   return result;
 };
 
+export const AddDocumentWithId = async (collectiondb, id, data) => {
+  const result = { statusResponse: true, error: null };
+  try {
+    await setDoc(doc(database, collectiondb, id), data);
+  } catch (error) {
+    result.statusResponse = false;
+    result.error = error;
+  }
+  return result;
+};
+
+export const UpdateDocumentWithId = async (collectiondb, id, data) => {
+  const result = { statusResponse: true, error: null };
+  try {
+    console.log("data", id);
+
+    const obj = doc(database, collectiondb, id);
+
+    console.log("obj", obj);
+
+    await updateDoc( obj, data )
+
+  } catch (error) {
+    result.statusResponse = false;
+    result.error = error;
+  }
+  return result;
+};
+
 export const uploadImage = async (image, path, name) => {
   const result = { statusResponse: false, error: null, url: null };
 
@@ -188,6 +211,7 @@ export const uploadImage = async (image, path, name) => {
     }
   );
   const uri = await getDownloadURL(uploadTask.snapshot.ref);
+  console.log("Uri", uri);
   result.statusResponse = true;
   result.url = uri;
   return result;

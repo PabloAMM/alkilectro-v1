@@ -27,28 +27,23 @@ export default function Navigation() {
         iconName = "chart-box-outline";
         break;
       case "account":
-        iconName = "home-outline";
+        iconName = "account-circle-outline";
         break;
     }
 
     return (
-      <Icon 
-        type="material-community" 
-        name={iconName} 
-        size={22} 
-        color={color} />
+      <Icon type="material-community" name={iconName} size={22} color={color} />
     );
   };
   return (
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName="events"
-        tabBarOptions={{
-          inactiveTintColor: "#828a95",
-          activeTintColor: "#21745d",
-        }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color }) => screenOptions(route, color),
+          tabBarActiveTintColor: "#21745d",
+          tabBarInactiveTintColor: "#828a95",
+          tabBarStyle: [{ display: "flex" }],
         })}
       >
         <Tab.Screen

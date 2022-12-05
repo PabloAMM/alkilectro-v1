@@ -12,7 +12,7 @@ export default function Login() {
     return (
         <KeyboardAwareScrollView>
             <Image
-                source={require("../../assets/alkilectroLogo.png")}
+                source={require("../../assets/alkilectroLogo_3.png")}
                 resizeMode="contain"
                 style={styles.image}
             />

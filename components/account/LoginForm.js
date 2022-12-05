@@ -42,7 +42,7 @@ export default function LoginForm() {
       
           }
       
-          navigation.navigate("account")
+          navigation.navigate("information")
         }
     
         const validateData = () => {

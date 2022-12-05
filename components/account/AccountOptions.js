@@ -8,6 +8,9 @@ import Modal from '../../utils/Modal'
 import ChangeDisplayNameForm from './ChangeDisplayNameForm'
 import ChangeEmailForm from './ChangeEmailForm'
 import ChangePasswordForm from './ChangePasswordForm'
+import ChangeIdentificationForm   from './ChangeIdentificationForm'   
+import ChangeAddressForm from './ChangeAddressForm'
+import ChangPhoneForm from './ChangPhoneForm'
 
 export default function AccountOptions({ user, toastRef, setReloadUser }) {
 
@@ -23,6 +26,30 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
                 iconNameRight: "chevron-right",
                 iconColorRight: "#a7bfd3",
                 onPress: () => selectedComponet("displayName")
+            },
+            {
+                title: "Cambiar identificación",
+                iconNameleft: "identifier",
+                iconColorLeft: "#a7bfd3",
+                iconNameRight: "chevron-right",
+                iconColorRight: "#a7bfd3",
+                onPress: () => selectedComponet("id")
+            },
+            {
+                title: "Cambiar dirección",
+                iconNameleft: "map-marker-outline",
+                iconColorLeft: "#a7bfd3",
+                iconNameRight: "chevron-right",
+                iconColorRight: "#a7bfd3",
+                onPress: () => selectedComponet("address")
+            },
+            {
+                title: "Cambiar telefono",
+                iconNameleft: "phone-refresh-outline",
+                iconColorLeft: "#a7bfd3",
+                iconNameRight: "chevron-right",
+                iconColorRight: "#a7bfd3",
+                onPress: () => selectedComponet("phone")
             },
             {
                 title: "Cambio de correo",
@@ -49,6 +76,36 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
                 setRenderComponet(
                     <ChangeDisplayNameForm
                         displayName={user.displayName}
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                        setReloadUser={setReloadUser}
+                    />
+                )
+                break;
+                case "id":
+                setRenderComponet(
+                    <ChangeIdentificationForm
+                        id={user.uid}
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                        setReloadUser={setReloadUser}
+                    />
+                )
+                break;
+                case "address":
+                setRenderComponet(
+                    <ChangeAddressForm
+                        id={user.uid}
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                        setReloadUser={setReloadUser}
+                    />
+                )
+                break;
+                case "phone":
+                setRenderComponet(
+                    <ChangPhoneForm
+                        id={user.uid}
                         setShowModal={setShowModal}
                         toastRef={toastRef}
                         setReloadUser={setReloadUser}
