@@ -11,8 +11,7 @@ import {
   updateEmail,
   updatePassword,
   updateProfile,
-  updatePhoneNumber,
-  PhoneAuthProvider,
+
 } from "firebase/auth";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";

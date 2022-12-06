@@ -22,7 +22,7 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
             {
                 title: "Cambiar nombre y apellidos",
                 iconNameleft: "account-circle",
-                iconColorLeft: "#a7bfd3",
+                iconColorLeft: "#587368",
                 iconNameRight: "chevron-right",
                 iconColorRight: "#a7bfd3",
                 onPress: () => selectedComponet("displayName")
@@ -30,7 +30,7 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
             {
                 title: "Cambiar identificación",
                 iconNameleft: "identifier",
-                iconColorLeft: "#a7bfd3",
+                iconColorLeft: "#587368",
                 iconNameRight: "chevron-right",
                 iconColorRight: "#a7bfd3",
                 onPress: () => selectedComponet("id")
@@ -38,7 +38,7 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
             {
                 title: "Cambiar dirección",
                 iconNameleft: "map-marker-outline",
-                iconColorLeft: "#a7bfd3",
+                iconColorLeft: "#587368",
                 iconNameRight: "chevron-right",
                 iconColorRight: "#a7bfd3",
                 onPress: () => selectedComponet("address")
@@ -46,7 +46,7 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
             {
                 title: "Cambiar telefono",
                 iconNameleft: "phone-refresh-outline",
-                iconColorLeft: "#a7bfd3",
+                iconColorLeft: "#587368",
                 iconNameRight: "chevron-right",
                 iconColorRight: "#a7bfd3",
                 onPress: () => selectedComponet("phone")
@@ -54,7 +54,7 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
             {
                 title: "Cambio de correo",
                 iconNameleft: "at",
-                iconColorLeft: "#a7bfd3",
+                iconColorLeft: "#587368",
                 iconNameRight: "chevron-right",
                 iconColorRight: "#a7bfd3",
                 onPress: () => selectedComponet("email")
@@ -62,7 +62,7 @@ export default function AccountOptions({ user, toastRef, setReloadUser }) {
             {
                 title: "Cambio de contraseña",
                 iconNameleft: "lock-reset",
-                iconColorLeft: "#a7bfd3",
+                iconColorLeft: "#587368",
                 iconNameRight: "chevron-right",
                 iconColorRight: "#a7bfd3",
                 onPress: () => selectedComponet("password")

@@ -2,7 +2,7 @@
 import * as ImagePicker from 'expo-image-picker'
 import * as Location from 'expo-location'
 import { Alert, Linking } from 'react-native'
-import * as Permissions from 'expo-permissions'
+
 
 
 export function validateEmail(email) {
@@ -13,16 +13,14 @@ export function validateEmail(email) {
 
 export const loadImageFromGallery = async (array) => {
     const response = { status: false, image: null }
-   // const [status, requestPermission] = ImagePicker.useCameraPermissions()
-     const resultPermissions = await Permissions.askAsync(Permissions.CAMERA)
-     console.log("resultPermissions",resultPermissions)
+   const responsePermission = ImagePicker.requestMediaLibraryPermissionsAsync()   
    
-    if (resultPermissions.status === "denied") {
+    if (responsePermission.granted === false) {
         Alert.alert("Debes de darle permiso para accerder a las imágenes del teléfono.")
         return response
     } 
     const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: array,
         quality: 1,
