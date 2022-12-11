@@ -43,7 +43,8 @@
         "LOCATION",
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "USER_FACING_NOTIFICATIONS"
+        "USER_FACING_NOTIFICATIONS",
+        "FOREGROUND_SERVICE"
       ]
     },
     "web": {

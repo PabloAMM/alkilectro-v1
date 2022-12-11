@@ -27,7 +27,6 @@ export const isUserLogged = () => {
 };
 
 export const getCurrentUser = () => {
-  console.log("User", auth.currentUser);
   return auth.currentUser;
 };
 

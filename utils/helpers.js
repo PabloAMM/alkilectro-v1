@@ -47,8 +47,8 @@ export const getCurrentLocation = async () => {
         location: null
     }
 
-    const resultPermission = await Permissons.askAsync(Permissons.LOCATION)
-    if (resultPermission.status == "denied") {
+    let { status } = await Location.requestForegroundPermissionsAsync()
+    if (status !== 'granted') {        
         Alert.alert("You must give permissions for the location")
         return response
     }
@@ -58,6 +58,7 @@ export const getCurrentLocation = async () => {
         longitude: position.coords.longitude,
         latitudeDelta: 0.001,
         longitudeDelta: 0.001
+        
     }
 
     response.status = true
