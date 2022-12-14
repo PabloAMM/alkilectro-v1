@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View, TextInput, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Input, Button } from "react-native-elements";
+import { Input, Button, Divider } from "react-native-elements";
 import CountryPicker from "react-native-country-picker-modal";
 import MapView, { Marker } from "react-native-maps";
-import { isEmpty } from "lodash";
+import { isEmpty, size } from "lodash";
+import CurrencyInput from "react-native-currency-input";
+
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Modal from "../../utils/Modal";
 import { getCurrentLocation } from "../../utils/helpers";
@@ -20,12 +23,14 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
   const [errorDeliveryDate, setErrorDeliveryDate] = useState(null);
   const [errorDeliveryTime, setErrorDeliveryTime] = useState(null);
   const [errorEquipments, setErrorEquipments] = useState(null);
-  const [errorPrice, setErrorPrice] = useState(null);
-  const [errorUseTime, setErroruseTime] = useState(null);
+  const [errorUseTime, setErrorUseTime] = useState(null);
   const [isVisibleMap, setIsVisibleMap] = useState(false);
   const [locationEvent, setLocationEvent] = useState(null);
+  const [isVisibleDatePicker, setIsVisibleDatePicker] = useState(false);
+  const [isVisibleTimePicker, setIsVisibleTimePicker] = useState(false);
 
   const addEvent = async () => {
+
     if (!validForm()) {
       return;
     }
@@ -47,7 +52,7 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
       equipments: formData.equipments,
       price: formData.price,
       useTime: formData.useTime,
-      id: formData.id,
+      documentId: formData.id,
       notes: formData.notes,
       createAt: new Date(),
       createBy: getCurrentUser().uid,
@@ -63,28 +68,34 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
       return;
     }
 
-    navigation.navigate("events")
+    navigation.navigate("events");
   };
 
   const validForm = () => {
     clearErrors();
+
     let isValid = true;
+
     if (isEmpty(formData.name)) {
       setErrorName("El nombre del cliente esta vacio");
       isValid = false;
     }
+
     if (isEmpty(formData.id)) {
       setErrorId("El numero de identificación esta vacio");
       isValid = false;
     }
-    if (isEmpty(formData.phone)) {
-      setErrorPhone("El número de telefono esta vacio");
+
+    if (size(formData.phone) < 10) {
+      setErrorPhone("El número de telefono no es valido");
       isValid = false;
     }
+
     if (isEmpty(formData.address)) {
       setErrorAddress("La dirección esta vacia");
       isValid = false;
     }
+
     if (isEmpty(formData.neighborhood)) {
       setErrorNeighborhood("El nombre del barrio esta vacio");
       isValid = false;
@@ -105,12 +116,16 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
       setErrorEquipments("No se ha ingresado equipo para el evento");
       isValid = false;
     }
-    if (isEmpty(formData.price)) {
-      setErrorPrice("El precio del evento esta vacio");
+     if (!formData.price) {
+      toastRef.current.show(
+        "El precio del evento esta vacio",
+        3000
+      );
       isValid = false;
-    }
+    } 
+
     if (isEmpty(formData.useTime)) {
-      setErroruseTime("El tiempo de uso en el evento esta vacio");
+      setErrorUseTime("El tiempo de uso en el evento esta vacio");
       isValid = false;
     }
     if (!locationEvent) {
@@ -120,7 +135,6 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
       );
       isValid = false;
     }
-
     return isValid;
   };
 
@@ -133,8 +147,8 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
     setErrorDeliveryDate(null);
     setErrorDeliveryTime(null);
     setErrorEquipments(null);
-    setErrorPrice(null);
-    setErroruseTime(null);
+    setErrorUseTime(null);
+    setErrorCity(null);
   };
   return (
     <ScrollView style={styles.viewContainer}>
@@ -150,10 +164,13 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
         errorDeliveryDate={errorDeliveryDate}
         errorDeliveryTime={errorDeliveryTime}
         errorEquipments={errorEquipments}
-        errorPrice={errorPrice}
         errorUseTime={errorUseTime}
         setIsVisibleMap={setIsVisibleMap}
         locationEvent={locationEvent}
+        isVisibleDatePicker={isVisibleDatePicker}
+        setIsVisibleDatePicker={setIsVisibleDatePicker}
+        isVisibleTimePicker={isVisibleTimePicker}
+        setIsVisibleTimePicker={setIsVisibleTimePicker}
       />
       <Button
         title="Crear Evento"
@@ -166,7 +183,77 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
         setLocationEvent={setLocationEvent}
         toastRef={toastRef}
       />
+      <DateEvent
+        formData={formData}
+        setFormData={setFormData}
+        isVisibleDatePicker={isVisibleDatePicker}
+        setIsVisibleDatePicker={setIsVisibleDatePicker}
+        toastRef={toastRef}
+      />
+      <TimeEvent
+        formData={formData}
+        setFormData={setFormData}
+        isVisibleTimePicker={isVisibleTimePicker}
+        setIsVisibleTimePickerPicker={setIsVisibleTimePicker}
+        toastRef={toastRef}
+      />
     </ScrollView>
+  );
+}
+function DateEvent({
+  formData,
+  setFormData,
+  isVisibleDatePicker,
+  setIsVisibleDatePicker,
+  toastRef,
+}) {
+  const hideDatePicker = () => {
+    setIsVisibleDatePicker(false);
+  };
+
+  const handleConfirm = (date) => {
+    setFormData({ ...formData, deliveryDate: date });
+    hideDatePicker();
+  };
+  return (
+    <View>
+      <DateTimePickerModal
+        isVisible={isVisibleDatePicker}
+        mode="date"
+        onConfirm={(date) => {
+          handleConfirm(date.toDateString());
+        }}
+        onCancel={hideDatePicker}
+      />
+    </View>
+  );
+}
+function TimeEvent({
+  formData,
+  setFormData,
+  isVisibleTimePicker,
+  setIsVisibleTimePicker,
+  toastRef,
+}) {
+  const hideTimePicker = () => {
+    setIsVisibleTimePicker(false);
+  };
+
+  const handleConfirm = (date) => {
+    setFormData({ ...formData, deliveryTime: date });
+    hideTimePicker();
+  };
+  return (
+    <View>
+      <DateTimePickerModal
+        isVisible={isVisibleTimePicker}
+        mode="time"
+        onConfirm={(date) => {
+          handleConfirm(date.toTimeString());
+        }}
+        onCancel={hideTimePicker}
+      />
+    </View>
   );
 }
 
@@ -246,14 +333,20 @@ function FormAdd({
   errorUseTime,
   setIsVisibleMap,
   locationEvent,
+  setIsVisibleDatePicker,
+  setIsVisibleTimePicker,
 }) {
   const [country, setCountry] = useState("CO");
   const [callingCode, setCallingCode] = useState("57");
+  const [price, setPrice] = useState(null);
 
   const onChange = (e, type) => {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
+  const hanledPrice = () => {
+    setFormData({ ...formData, price: price });
+  };
   return (
     <View style={styles.viewForm}>
       <Input
@@ -265,6 +358,7 @@ function FormAdd({
       <Input
         placeholder="CC/NIT"
         defaultValue={formData.id}
+        keyboardType="number-pad"
         onChange={(e) => onChange(e, "id")}
         errorMessage={errorId}
       />
@@ -302,7 +396,7 @@ function FormAdd({
         rightIcon={{
           type: "material-community",
           name: "google-maps",
-          color: locationEvent ? "#442484" : "#c2c2c2",
+          color: locationEvent ? "#4c7464" : "#c2c2c2",
           onPress: () => setIsVisibleMap(true),
         }}
       />
@@ -318,6 +412,7 @@ function FormAdd({
         onChange={(e) => onChange(e, "city")}
         errorMessage={errorCity}
       />
+
       <Input
         placeholder="Fecha de entrega"
         defaultValue={formData.deliveryDate}
@@ -326,7 +421,8 @@ function FormAdd({
         rightIcon={{
           type: "material-community",
           name: "calendar-range",
-          color: "#c2c2c2",
+          color: formData.deliveryDate ? "#4c7464" : "#c2c2c2",
+          onPress: () => setIsVisibleDatePicker(true),
         }}
       />
       <Input
@@ -334,6 +430,12 @@ function FormAdd({
         defaultValue={formData.deliveryTime}
         onChange={(e) => onChange(e, "deliveryTime")}
         errorMessage={errorDeliveryTime}
+        rightIcon={{
+          type: "material-community",
+          name: "clock-outline",
+          color: formData.deliveryTime ? "#4c7464" : "#c2c2c2",
+          onPress: () => setIsVisibleTimePicker(true),
+        }}
       />
       <Input
         placeholder="Equipos requeridos"
@@ -341,15 +443,28 @@ function FormAdd({
         onChange={(e) => onChange(e, "equipments")}
         errorMessage={errorEquipments}
       />
-      <Input
-        placeholder="Valor a pagar"
-        defaultValue={formData.price}
-        onChange={(e) => onChange(e, "price")}
-        errorMessage={errorPrice}
-      />
+      <View style={styles.viewCurrencyInput}>
+        <CurrencyInput
+          placeholder="Valor a pagar"
+          value={price}
+          editable={true}
+          prefix="$"
+          separator=","
+          delimiter="."
+          precision={0}
+          minValue={0}
+          defaultValue={price}
+          keyboardType="numeric"
+          onChangeValue={setPrice}
+          onChangeText={hanledPrice}
+          style={styles.CurrencyInput}
+        />
+        <Divider style={styles.divider} />
+      </View>
       <Input
         placeholder="Tiempo de uso en días"
         defaultValue={formData.useTime}
+        keyboardType="number-pad"
         onChange={(e) => onChange(e, "useTime")}
         errorMessage={errorUseTime}
       />
@@ -448,5 +563,19 @@ const styles = StyleSheet.create({
   },
   viewMapBtnSave: {
     backgroundColor: "#442484",
+  },
+  viewCurrencyInput: {
+    flex: 1,
+    marginTop: 1,
+    alignContent: "flex-start",
+  },
+  CurrencyInput: {
+    fontSize: 18,
+    marginLeft: 10,
+  },
+  divider: {
+    backgroundColor: "#6e7a7e",
+    margin: 10,
+    paddingVertical: 0.5,
   },
 });

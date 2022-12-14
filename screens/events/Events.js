@@ -1,27 +1,43 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Icon } from "react-native-elements";
 import { size } from "lodash";
+import { useFocusEffect } from "@react-navigation/native";
 
-import  {onAuthStateChanged} from 'firebase/auth'
-import {auth} from '../../utils/firebase'
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../utils/firebase";
 
-import ListEvents from "./ListEvents";
-import { isUserLogged, getCurrentUser } from "../../utils/actions";
+import ListEvents from "../../components/events/ListEvents";
+import { isUserLogged, getCurrentUser, getEvents } from "../../utils/actions";
 import Loading from "../../components/loading/Loading";
 
 export default function Events({ navigation }) {
   const [user, setUser] = useState(null);
-  const [events, setEvents] = useState();
+  const [events, setEvents] = useState([]);
+  const [startEvent, setStartEvent] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const limitEvents = 7;
+
   useEffect(() => {
-     onAuthStateChanged(auth,(userInfo) => {
-        userInfo ? setUser(true) : setUser(false)
-    })
-}, [])
+    onAuthStateChanged(auth, (userInfo) => {
+      userInfo ? setUser(true) : setUser(false);
+    });
+  }, []);
 
+  useFocusEffect(
+    useCallback(async () => {
+      setLoading(true);
+      const response = await getEvents(limitEvents);
+      if (response.statusResponse) {
+        setStartEvent(response.startEvent);
+        setEvents(response.events);
+      }
+      setLoading(false);
+    }, [])
+  );
 
+  const handleLoadMore = () => {};
   if (user === null) {
     return <Loading isVisible={true} text="Cargando..." />;
   }
@@ -29,7 +45,7 @@ export default function Events({ navigation }) {
     <View style={styles.viewBody}>
       {size(events) > 0 ? (
         <ListEvents
-          restaurants={events}
+          events={events}
           navigation={navigation}
           handleLoadMore={handleLoadMore}
         />
@@ -64,5 +80,14 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.5,
+  },
+  notFoundView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notFoundText: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

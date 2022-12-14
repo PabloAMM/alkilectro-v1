@@ -1,0 +1,14 @@
+AIzaSyAWxbIFh6g6rozbbdFdWghNcQA0X1-UCvQ
+
+Keystore credentials
+  Keystore password: fe836fa0ce4d41c3a7f03fb25973ebd4
+  Key alias:         QHBhYmxvYW1tL2Fsa2lsZWN0cm8tdjE=
+  Key password:      9538615738084738b8a09ad798471e0c
+
+  Path to Keystore:  @pabloamm__alkilectro-v1.bak.jks
+
+
+Google Certificate Fingerprint:     8A:38:FA:91:E5:43:0D:51:C7:18:D1:5E:09:80:68:66:81:6A:35:2E
+Google Certificate Hash (SHA-1):    8A38FA91E5430D51C718D15E09806866816A352E
+Google Certificate Hash (SHA-256):  44C3E3C1B2B632C6D5BFF9AB9ABDDF5E55B7D04842605AC2FEE5E69DA7F553D8
+Facebook Key Hash:                  ijj6keVDDVHHGNFeCYBoZoFqNS4=

@@ -1,5 +1,15 @@
 import { auth, database, firebaseApp, storage } from "./firebase";
-import { collection, addDoc, doc, updateDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  setDoc,
+  getDocs,
+  query,
+  limit,
+  orderBy,
+} from "firebase/firestore";
 import "firebase/firestore";
 import { fileTobBlob } from "./helpers";
 import {
@@ -11,7 +21,6 @@ import {
   updateEmail,
   updatePassword,
   updateProfile,
-
 } from "firebase/auth";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -137,6 +146,34 @@ export const addDocumentWithoutId = async (collectiondb, data) => {
   }
   return result;
 };
+export const getEvents = async (limitEvents) => {
+  const result = {
+    statusResponse: true,
+    error: null,
+    events: [],
+    startEvent: null,
+  };
+  try {
+    const q = query(
+      collection(database, "events"),
+      orderBy("deliveryDate", "desc"),
+      limit(limitEvents)
+    );
+    const response = await getDocs(q);
+    if (response.docs.length > 0) {
+      result.startEvent = response.docs[response.docs.length -1]
+      response.forEach((doc)=>{
+        const event = doc.data()
+        event.id = doc.id
+        result.events.push(event)
+      })
+    }
+  } catch (error) {
+    result.statusResponse = false;
+    result.error = error;
+  }
+  return result;
+};
 
 export const AddDocumentWithId = async (collectiondb, id, data) => {
   const result = { statusResponse: true, error: null };
@@ -158,8 +195,7 @@ export const UpdateDocumentWithId = async (collectiondb, id, data) => {
 
     console.log("obj", obj);
 
-    await updateDoc( obj, data )
-
+    await updateDoc(obj, data);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
@@ -209,7 +245,6 @@ export const uploadImage = async (image, path, name) => {
     }
   );
   const uri = await getDownloadURL(uploadTask.snapshot.ref);
-  console.log("Uri", uri);
   result.statusResponse = true;
   result.url = uri;
   return result;
