@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState, useCallback } from "react";
 import { Icon } from "react-native-elements";
-import { size } from "lodash";
+import { get, set, size } from "lodash";
 import { useFocusEffect } from "@react-navigation/native";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 
 import ListEvents from "../../components/events/ListEvents";
-import { isUserLogged, getCurrentUser, getEvents } from "../../utils/actions";
+import { getEvents,getMoreEvents } from "../../utils/actions";
 import Loading from "../../components/loading/Loading";
 
 export default function Events({ navigation }) {
@@ -26,18 +26,34 @@ export default function Events({ navigation }) {
   }, []);
 
   useFocusEffect(
-    useCallback(async () => {
-      setLoading(true);
-      const response = await getEvents(limitEvents);
-      if (response.statusResponse) {
-        setStartEvent(response.startEvent);
-        setEvents(response.events);
+    useCallback(() => {
+      async function getData() {
+        setLoading(true);
+        const response = await getEvents(limitEvents);
+        if (response.statusResponse) {
+          setStartEvent(response.startEvent);
+          setEvents(response.events);
+        }
+
+        setLoading(false);
       }
-      setLoading(false);
+      getData();
     }, [])
   );
 
-  const handleLoadMore = () => {};
+  const handleLoadMore = async () => {
+       if (!startEvent) {
+      return;
+    }
+    
+    setLoading(true);
+    const response = await getMoreEvents(limitEvents, startEvent);
+    if (response.statusResponse) {
+      setStartEvent(response.startEvent);
+      setEvents([...events, ...response.events]);
+    }
+    setLoading(false);
+  };
   if (user === null) {
     return <Loading isVisible={true} text="Cargando..." />;
   }

@@ -1,12 +1,39 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Alert } from "react-native";
+import React, { useEffect,useState } from "react";
 
-export default function Event() {
+import { getDocumentById } from "../../utils/actions";
+import Loading from "../../components/loading/Loading";
+
+export default function Event({ navigation, route }) {
+  const [event, setEvent] = useState(null);
+  const { id, name } = route.params;
+
+  navigation.setOptions({ title: name });
+
+  useEffect(() => {
+    (async () => {
+      const response = await getDocumentById("events", id);
+      
+      if (response.statusResponse) {
+        setEvent(response.document);
+      } else {
+        setEvent({});
+        Alert.alert(
+          "Ocurrió un problema cargando el evento, intente mas tarde"
+        );
+      }
+    })();
+  }, []);
+
+  if (!event) {
+    return <Loading isVisible={true} text="Cargando..." />;
+  }
+
   return (
     <View>
-      <Text>Event</Text>
+      <Text>{event.notes}</Text>
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

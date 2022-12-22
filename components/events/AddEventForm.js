@@ -30,7 +30,6 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
   const [isVisibleTimePicker, setIsVisibleTimePicker] = useState(false);
 
   const addEvent = async () => {
-
     if (!validForm()) {
       return;
     }
@@ -68,7 +67,7 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
       return;
     }
 
-    navigation.navigate("events");
+    navigation.navigate("eventsProgrammed");
   };
 
   const validForm = () => {
@@ -116,13 +115,10 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
       setErrorEquipments("No se ha ingresado equipo para el evento");
       isValid = false;
     }
-     if (!formData.price) {
-      toastRef.current.show(
-        "El precio del evento esta vacio",
-        3000
-      );
+    if (!formData.price) {
+      toastRef.current.show("El precio del evento esta vacio", 3000);
       isValid = false;
-    } 
+    }
 
     if (isEmpty(formData.useTime)) {
       setErrorUseTime("El tiempo de uso en el evento esta vacio");
@@ -167,9 +163,8 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
         errorUseTime={errorUseTime}
         setIsVisibleMap={setIsVisibleMap}
         locationEvent={locationEvent}
-        isVisibleDatePicker={isVisibleDatePicker}
-        setIsVisibleDatePicker={setIsVisibleDatePicker}
         isVisibleTimePicker={isVisibleTimePicker}
+        setIsVisibleDatePicker={setIsVisibleDatePicker}
         setIsVisibleTimePicker={setIsVisibleTimePicker}
       />
       <Button
@@ -183,19 +178,18 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
         setLocationEvent={setLocationEvent}
         toastRef={toastRef}
       />
+
       <DateEvent
         formData={formData}
         setFormData={setFormData}
         isVisibleDatePicker={isVisibleDatePicker}
         setIsVisibleDatePicker={setIsVisibleDatePicker}
-        toastRef={toastRef}
       />
       <TimeEvent
         formData={formData}
         setFormData={setFormData}
         isVisibleTimePicker={isVisibleTimePicker}
-        setIsVisibleTimePickerPicker={setIsVisibleTimePicker}
-        toastRef={toastRef}
+        setIsVisibleTimePicker={setIsVisibleTimePicker}
       />
     </ScrollView>
   );
@@ -205,7 +199,6 @@ function DateEvent({
   setFormData,
   isVisibleDatePicker,
   setIsVisibleDatePicker,
-  toastRef,
 }) {
   const hideDatePicker = () => {
     setIsVisibleDatePicker(false);
@@ -233,7 +226,6 @@ function TimeEvent({
   setFormData,
   isVisibleTimePicker,
   setIsVisibleTimePicker,
-  toastRef,
 }) {
   const hideTimePicker = () => {
     setIsVisibleTimePicker(false);
@@ -335,9 +327,8 @@ function FormAdd({
   locationEvent,
   setIsVisibleDatePicker,
   setIsVisibleTimePicker,
+  isVisibleTimePicker,
 }) {
-  const [country, setCountry] = useState("CO");
-  const [callingCode, setCallingCode] = useState("57");
   const [price, setPrice] = useState(null);
 
   const onChange = (e, type) => {
@@ -412,7 +403,6 @@ function FormAdd({
         onChange={(e) => onChange(e, "city")}
         errorMessage={errorCity}
       />
-
       <Input
         placeholder="Fecha de entrega"
         defaultValue={formData.deliveryDate}
@@ -425,6 +415,7 @@ function FormAdd({
           onPress: () => setIsVisibleDatePicker(true),
         }}
       />
+
       <Input
         placeholder="Hora de entrega"
         defaultValue={formData.deliveryTime}
@@ -437,6 +428,7 @@ function FormAdd({
           onPress: () => setIsVisibleTimePicker(true),
         }}
       />
+
       <Input
         placeholder="Equipos requeridos"
         defaultValue={formData.equipments}

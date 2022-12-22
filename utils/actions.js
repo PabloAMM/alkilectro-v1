@@ -6,9 +6,11 @@ import {
   updateDoc,
   setDoc,
   getDocs,
+  getDoc,
   query,
   limit,
   orderBy,
+  startAfter,
 } from "firebase/firestore";
 import "firebase/firestore";
 import { fileTobBlob } from "./helpers";
@@ -44,7 +46,6 @@ export const registerUser = async (email, password) => {
   try {
     const user = await createUserWithEmailAndPassword(auth, email, password);
     result.uid = user.user.uid;
-    console.log("UserCreated", user);
   } catch (error) {
     result.statusResponse = false;
     result.error = "Este correo ya ha sido registrado";
@@ -60,7 +61,6 @@ export const updateUserProfile = async (data) => {
   const result = { statusResponse: true, error: null };
 
   try {
-    console.log("data", data);
     await updateProfile(auth.currentUser, data);
   } catch (error) {
     result.statusResponse = false;
@@ -92,13 +92,11 @@ export const reauthenticate = async (password) => {
 
   const user = getCurrentUser();
   const credentials = EmailAuthProvider.credential(user.email, password);
-  console.log("Credentials", credentials);
   try {
     const reauthentication = await reauthenticateWithCredential(
       user,
       credentials
     );
-    console.log("Reauthentication", reauthentication);
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
@@ -161,13 +159,65 @@ export const getEvents = async (limitEvents) => {
     );
     const response = await getDocs(q);
     if (response.docs.length > 0) {
-      result.startEvent = response.docs[response.docs.length -1]
-      response.forEach((doc)=>{
-        const event = doc.data()
-        event.id = doc.id
-        result.events.push(event)
-      })
+      result.startEvent = response.docs[response.docs.length - 1];
+      response.forEach((doc) => {
+        const event = doc.data();
+        event.id = doc.id;
+        result.events.push(event);
+      });
     }
+  } catch (error) {
+    result.statusResponse = false;
+    result.error = error;
+  }
+  return result;
+};
+
+export const getMoreEvents = async (limitEvents, startEvent) => {
+  const result = {
+    statusResponse: true,
+    error: null,
+    events: [],
+    startEvent: null,
+  };
+  try {
+    const q = query(
+      collection(database, "events"),
+      orderBy("deliveryDate", "desc"),
+      startAfter(startEvent.data().deliveryDate),
+      limit(limitEvents)
+    );
+
+    const response = await getDocs(q);
+
+    if (response.docs.length > 0) {
+      result.startEvent = response.docs[response.docs.length - 1];
+      response.forEach((doc) => {
+        const event = doc.data();
+        event.id = doc.id;
+        result.events.push(event);
+      });
+    }
+  } catch (error) {
+    result.statusResponse = false;
+    result.error = error;
+  }
+  return result;
+};
+
+export const getDocumentById = async (collectiondb, id) => {
+  const result = {
+    statusResponse: true,
+    error: null,
+    document: null,
+  };
+  try {
+    const docRef = doc(database, collectiondb, id);
+
+    const response = await getDoc(docRef);
+
+    result.document = response.data();
+    result.document.id = response.id;
   } catch (error) {
     result.statusResponse = false;
     result.error = error;
