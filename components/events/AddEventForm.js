@@ -5,8 +5,8 @@ import CountryPicker from "react-native-country-picker-modal";
 import MapView, { Marker } from "react-native-maps";
 import { isEmpty, size } from "lodash";
 import CurrencyInput from "react-native-currency-input";
-
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { SelectList } from "react-native-dropdown-select-list";
 
 import Modal from "../../utils/Modal";
 import { getCurrentLocation } from "../../utils/helpers";
@@ -53,6 +53,7 @@ export default function AddEventForm({ toastRef, setLoading, navigation }) {
       useTime: formData.useTime,
       documentId: formData.id,
       notes: formData.notes,
+      status: formData.status,
       createAt: new Date(),
       createBy: getCurrentUser().uid,
     };
@@ -215,6 +216,7 @@ function DateEvent({
         mode="date"
         onConfirm={(date) => {
           handleConfirm(date.toDateString());
+
         }}
         onCancel={hideDatePicker}
       />
@@ -338,6 +340,13 @@ function FormAdd({
   const hanledPrice = () => {
     setFormData({ ...formData, price: price });
   };
+
+  const arrayStatus = [
+    { key: '1', value: 'Programado' },
+    { key: '2', value: 'En progreso' },
+    { key: '3', value: 'Terminado' },
+    { key: '4', value: 'Cancelado' }
+  ]
   return (
     <View style={styles.viewForm}>
       <Input
@@ -460,6 +469,22 @@ function FormAdd({
         onChange={(e) => onChange(e, "useTime")}
         errorMessage={errorUseTime}
       />
+      <View style={styles.viewStatus}>
+        <Text style={styles.labelStatus}>Status: </Text>
+        <SelectList
+          setSelected={(status) => {
+            setFormData({
+              ...formData,
+              status: status
+            });
+          }}
+          data={arrayStatus}
+          placeholder={"Seleccione el status"}
+          defaultOption={{ key: '1', value: 'Programado' }}
+          dropdownItemStyles={{ marginHorizontal: 10, width: "100%" }}
+
+        />
+      </View>
       <Input
         placeholder="Notas"
         multiline
@@ -487,8 +512,10 @@ const defaultFormValues = () => {
     price: "",
     useTime: "",
     notes: "",
+    status: "1",
   };
 };
+
 
 const styles = StyleSheet.create({
   viewContainer: {
@@ -570,4 +597,26 @@ const styles = StyleSheet.create({
     margin: 10,
     paddingVertical: 0.5,
   },
+  viewStatus: {
+    flexDirection: "row",
+
+
+  },
+  labelStatus: {
+    fontSize: 18,
+    marginLeft: 10,
+    color: "#6e7a7e"
+  },
+  boxStyleStatus: {
+
+    borderColor: "#6e7a7e",
+
+
+  },
+  dropdownStatus: {
+
+  },
+  InputStatus: {
+
+  }
 });

@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Alert } from "react-native";
-import React, { useEffect,useState } from "react";
+import { StyleSheet, Text, View, Alert, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
 
 import { getDocumentById } from "../../utils/actions";
 import Loading from "../../components/loading/Loading";
+import { Input } from "react-native-elements";
 
 export default function Event({ navigation, route }) {
   const [event, setEvent] = useState(null);
@@ -13,7 +14,7 @@ export default function Event({ navigation, route }) {
   useEffect(() => {
     (async () => {
       const response = await getDocumentById("events", id);
-      
+
       if (response.statusResponse) {
         setEvent(response.document);
       } else {
@@ -30,10 +31,39 @@ export default function Event({ navigation, route }) {
   }
 
   return (
-    <View>
-      <Text>{event.notes}</Text>
-    </View>
+    <ScrollView style={styles.viewBody}>
+      <TitleEvent
+        name={event.name}
+        description={event.notes}
+      />
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({});
+function TitleEvent({ name, description }) {
+  return (
+    <View style={styles.viewEventTitle}>
+      <Text style={styles.nameEvent}>{name}</Text>
+      <Text style={styles.descriptionEvent}>{description}</Text>
+      <Input>{description}</Input>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  viewBody: {
+    flex: 1,
+    backgroundColor: "#fff"
+  },
+  viewEventTitle: {
+    padding: 15
+  },
+  nameEvent: {
+    fontWeight: "bold"
+  },
+  descriptionEvent: {
+    marginTop: 5,
+    color: "gray",
+    textAlign: "justify"
+  }
+});

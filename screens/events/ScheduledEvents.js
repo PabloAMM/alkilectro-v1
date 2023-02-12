@@ -11,7 +11,7 @@ import ListEvents from "../../components/events/ListEvents";
 import { getEvents, getMoreEvents } from "../../utils/actions";
 import Loading from "../../components/loading/Loading";
 
-export default function Events({ navigation,status }) {
+export default function ScheduledEvents({ navigation }) {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
   const [startEvent, setStartEvent] = useState(null);
@@ -29,7 +29,7 @@ export default function Events({ navigation,status }) {
     useCallback(() => {
       async function getData() {
         setLoading(true);
-        const response = await getEvents(limitEvents, status);
+        const response = await getEvents(limitEvents, "1");
          if (response.statusResponse) {
           setStartEvent(response.startEvent);
           setEvents(response.events);
@@ -47,7 +47,7 @@ export default function Events({ navigation,status }) {
     }
 
     setLoading(true);
-    const response = await getMoreEvents(limitEvents, startEvent, status);
+    const response = await getMoreEvents(limitEvents, startEvent, "2");
     if (response.statusResponse) {
       setStartEvent(response.startEvent);
       setEvents([...events, ...response.events]);

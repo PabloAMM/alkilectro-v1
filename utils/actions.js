@@ -11,6 +11,7 @@ import {
   limit,
   orderBy,
   startAfter,
+  where,
 } from "firebase/firestore";
 import "firebase/firestore";
 import { fileTobBlob } from "./helpers";
@@ -144,7 +145,7 @@ export const addDocumentWithoutId = async (collectiondb, data) => {
   }
   return result;
 };
-export const getEvents = async (limitEvents) => {
+export const getEvents = async (limitEvents,statusEvent) => {
   const result = {
     statusResponse: true,
     error: null,
@@ -153,9 +154,10 @@ export const getEvents = async (limitEvents) => {
   };
   try {
     const q = query(
-      collection(database, "events"),
-      orderBy("deliveryDate", "desc"),
-      limit(limitEvents)
+      collection(database, "events"),      
+      limit(limitEvents),
+      where( "status" ,"==",statusEvent),
+      orderBy("deliveryDate", "desc")
     );
     const response = await getDocs(q);
     if (response.docs.length > 0) {
@@ -173,7 +175,7 @@ export const getEvents = async (limitEvents) => {
   return result;
 };
 
-export const getMoreEvents = async (limitEvents, startEvent) => {
+export const getMoreEvents = async (limitEvents, startEvent,statusEvent) => {
   const result = {
     statusResponse: true,
     error: null,
@@ -182,10 +184,11 @@ export const getMoreEvents = async (limitEvents, startEvent) => {
   };
   try {
     const q = query(
-      collection(database, "events"),
-      orderBy("deliveryDate", "desc"),
+      collection(database, "events"),      
       startAfter(startEvent.data().deliveryDate),
-      limit(limitEvents)
+      limit(limitEvents),
+      where( "status" ,"==",statusEvent),
+      orderBy("deliveryDate", "desc")
     );
 
     const response = await getDocs(q);
